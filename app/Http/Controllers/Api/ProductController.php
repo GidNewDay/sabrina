@@ -12,14 +12,18 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::with('category');
-
-        if ($request->category_id) {
+    
+        // Фильтрация по категории
+        if ($request->has('category_id') && $request->category_id != '') {
             $query->where('category_id', $request->category_id);
         }
-
-        return ProductResource::collection(
-            $query->latest()->paginate(10)
-        );
+        
+        $products = $query
+                ->latest()
+                ->paginate(15)
+                ->appends($request->query()); // сохраняет query params в пагинации;
+        
+        return ProductResource::collection($products);
     }
 
     public function show($id){
