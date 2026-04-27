@@ -25,29 +25,6 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $category = Category::query()->firstOrCreate(
-            ['name' => 'Electronics'],
-            ['description' => 'Electronic devices']
-        );
-
-        Product::query()->updateOrCreate(
-            ['id' => 1],
-            [
-                'name' => 'Laptop',
-                'description' => '14-inch ultrabook',
-                'price' => 1299.00,
-                'category_id' => $category->id,
-            ]
-        );
-
-        Product::query()->updateOrCreate(
-            ['id' => 2],
-            [
-                'name' => 'Phone',
-                'description' => 'Flagship smartphone',
-                'price' => 999.00,
-                'category_id' => $category->id,
-            ]
-        );
+        $this->call(ProductCatalogSeeder::class);
     }
 }
