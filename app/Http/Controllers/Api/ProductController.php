@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
 {
@@ -30,5 +32,27 @@ class ProductController extends Controller
         $product = Product::with('category')->findOrFail($id);
 
         return new ProductResource($product);
+    }
+
+    public function store(StoreProductRequest $request){
+        $product = Product::create($request->validated());
+
+        return new ProductResource(
+            $product->load('category')
+        );
+    }
+
+    public function update(UpdateProductRequest $request, $id){
+        $product = Product::findOrFail($id);
+        $product->update($request->validated());
+
+        return new ProductResource($product->load('category'));
+    }
+
+    public function destroy($id){
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted successfully']);
     }
 }

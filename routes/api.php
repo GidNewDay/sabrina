@@ -8,6 +8,5 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 
-Route::get('/test', function () {
-    return 'API OK';
-});
+Route::apiResource('products', ProductController::class)
+    ->only(['index', 'show', 'store', 'update', 'destroy']);
