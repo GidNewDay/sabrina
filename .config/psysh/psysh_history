@@ -1,0 +1,12 @@
+$cat = \App\Models\Category::create([
+    'name' => 'Electronics'
+]);
+\App\Models\Product::create([
+    'name' => 'Phone',
+    'price' => 999,
+    'category_id' => $cat->id
+]);
+\App\Models\Product::with('category')->get();
+exit
+\App\Models\Product::with('category')->get();
+exit

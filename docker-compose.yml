@@ -1,0 +1,57 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PUID: ${PUID:-1000}
+        PGID: ${PGID:-1000}
+    container_name: laravel_app
+    # Run as host uid/gid (same as PUID remapped www-data) so `docker compose exec app`
+    # and PHP-FPM workers do not create root-owned files on the bind mount.
+    user: "${PUID:-1000}:${PGID:-1000}"
+    environment:
+      HOME: /tmp
+      XDG_CONFIG_HOME: /tmp/.config
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+
+  webserver:
+    image: nginx:alpine
+    container_name: nginx_server
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: catalog
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  node:
+    image: node:20
+    container_name: node_container
+    user: "${PUID:-1000}:${PGID:-1000}"
+    working_dir: /var/www
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/var/www
+    command: tail -f /dev/null
+
+volumes:
+  dbdata:
