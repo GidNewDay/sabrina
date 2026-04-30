@@ -1,44 +1,32 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import api from '@/api/axios'
+import { onMounted } from 'vue'
+import { useProductApi } from '@/composables/useProductApi'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
-import { router } from '@inertiajs/vue3'
 
-const products = ref([])
-
-const fetchProducts = async () => {
-    const res = await api.get('/products')
-    products.value = res.data.data
-}
-
-const deleteProduct = async (id) => {
-    if (!confirm('Delete?')) return
-
-    await api.delete(`/products/${id}`)
-    fetchProducts()
-}
+const {
+    products,
+    loading,
+    fetchProducts,
+    deleteProduct
+} = useProductApi()
 
 onMounted(fetchProducts)
 </script>
 
 <template>
     <AdminLayout>
-        <h1>Admin Products</h1>
+        <h1>Products</h1>
 
-        <button @click="router.visit('/admin/products/create')">
-            Add Product
-        </button>
+        <div v-if="loading">Loading...</div>
 
-        <div v-for="p in products" :key="p.id">
-            <h3>{{ p.name }}</h3>
+        <div v-else>
+            <div v-for="p in products.data" :key="p.id">
+                {{ p.name }}
 
-            <button @click="router.visit(`/admin/products/${p.id}/edit`)">
-                Edit
-            </button>
-
-            <button @click="deleteProduct(p.id)">
-                Delete
-            </button>
+                <button @click="deleteProduct(p.id).then(fetchProducts)">
+                    Delete
+                </button>
+            </div>
         </div>
     </AdminLayout>
 </template>

@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import api from '@/api/axios'
 
-const user = ref(null)
+const token = ref(localStorage.getItem('token'))
 
 export function useAuth() {
 
@@ -13,12 +13,18 @@ export function useAuth() {
     }
 
     const logout = () => {
+        token.value = null
         localStorage.removeItem('token')
     }
 
+    const isAuthenticated = () => {
+        return !!token.value
+    }
+
     return {
-        user,
+        token,
         login,
-        logout
+        logout,
+        isAuthenticated
     }
 }

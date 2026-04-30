@@ -8,15 +8,16 @@ const api = axios.create({
     withCredentials: true,
 });
 
-// 🔐 автоматически добавляем токен
-api.interceptors.request.use(config => {
-    const token = localStorage.getItem('token')
+api.interceptors.response.use(
+    res => res,
+    err => {
+        if (err.response?.status === 401) {
+            localStorage.removeItem('token')
+            window.location.href = '/login'
+        }
 
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`
+        return Promise.reject(err)
     }
-
-    return config
-})
+)
 
 export default api;
