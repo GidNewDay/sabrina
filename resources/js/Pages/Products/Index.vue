@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { usePage, router } from '@inertiajs/vue3'
 import api from '@/api/axios'
-import ProductCard from '@/Components/ProductCard.vue'
+import ProductCard from '@/components/ProductCard.vue'
 
 const products = ref([])
 const categories = ref([])

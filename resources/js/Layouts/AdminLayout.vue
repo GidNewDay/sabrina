@@ -1,6 +1,7 @@
 <script setup>
 import { useAuth } from '@/composables/useAuth'
 import { router } from '@inertiajs/vue3'
+import Toast from '@/components/Toast.vue'
 
 const { logout } = useAuth()
 
@@ -17,6 +18,7 @@ const handleLogout = () => {
             <button @click="handleLogout">Logout</button>
         </nav>
 
+        <Toast />
         <slot />
     </div>
 </template>
