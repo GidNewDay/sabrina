@@ -17,7 +17,9 @@ const submit = async () => {
         })
 
         router.visit('/admin/products')
+
     } catch (e) {
+        console.log(e.response?.data)
         error.value = 'Login failed'
     }
 }
@@ -27,10 +29,22 @@ const submit = async () => {
     <div>
         <h1>Login</h1>
 
-        <input v-model="email" placeholder="Email" />
-        <input v-model="password" type="password" placeholder="Password" />
+        <!-- ❗ ВАЖНО -->
+        <form @submit.prevent="submit">
 
-        <button @click="submit">Login</button>
+            <input v-model="email" placeholder="Email" />
+
+            <input
+                v-model="password"
+                type="password"
+                placeholder="Password"
+            />
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
 
         <p v-if="error">{{ error }}</p>
     </div>
