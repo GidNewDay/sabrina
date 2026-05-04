@@ -81,7 +81,7 @@ class ProductTest extends TestCase
         $user = User::factory()->create();
         $category = Category::factory()->create();
 
-        // 🔐 имитируем авторизацию
+        // имитируем авторизацию
         Sanctum::actingAs($user);
 
         $response = $this->postJson('/api/products', [
@@ -102,9 +102,6 @@ class ProductTest extends TestCase
     {
         $user = User::factory()->create();
         $category = Category::factory()->create();
-        $product = Product::factory()->create([
-            'category_id' => $category->id
-        ]);
 
         Sanctum::actingAs($user);
 
